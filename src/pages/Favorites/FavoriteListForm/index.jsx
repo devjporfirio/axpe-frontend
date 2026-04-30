@@ -16,6 +16,7 @@ const slugify = (text) =>
 const FavoriteListForm = ({ data }) => {
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(false)
+  const baseUrl = process.env.config?.apiUrl;
 
   const router = useRouter()
 
@@ -39,7 +40,7 @@ const FavoriteListForm = ({ data }) => {
   const checkExistingList = async (email) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/lists/user/${encodeURIComponent(email)}`
+        `${baseUrl}/api/favorites/lists/user/${encodeURIComponent(email)}`
       )
 
       const json = await res.json()
@@ -62,7 +63,7 @@ const FavoriteListForm = ({ data }) => {
   // 🔥 POST criar lista
   const createList = async (email, name) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/lists`,
+      `${baseUrl}/api/favorites/lists`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

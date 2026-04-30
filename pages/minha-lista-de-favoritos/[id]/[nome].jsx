@@ -33,6 +33,8 @@ import {
 const MyFavoriteList = () => {
   const router = useRouter()
   const { id } = router.query
+
+  const baseUrl = process.env.config?.apiUrl;
   
   const [shareActive, setShareActive] = useState(false)
   const [listName, setListName] = useState('')
@@ -56,8 +58,8 @@ const MyFavoriteList = () => {
       setDataReady(false)
 
       const [listRes, itemsRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/lists/${listId}`),
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/lists/${listId}/items`)
+        fetch(`${baseUrl}/api/favorites/lists/${listId}`),
+        fetch(`${baseUrl}/api/favorites/lists/${listId}/items`)
       ])
 
       const listJson = await listRes.json()
@@ -79,7 +81,7 @@ const MyFavoriteList = () => {
           console.log("userEmail", userEmail)
           try {
             const userRes = await fetch(
-              `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/lists/${list?.id}`
+              `${baseUrl}/api/favorites/lists/${list?.id}`
             )
 
             const userJson = await userRes.json()
@@ -107,7 +109,7 @@ const MyFavoriteList = () => {
               if (!item?.referencia) return null
 
               const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/building/${item.referencia}`
+                `${baseUrl}/api/building/${item?.referencia}`
               )
 
               const buildingJson = await response.json()
@@ -150,7 +152,7 @@ const MyFavoriteList = () => {
       setLoading(true)
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/lists/${id}`,
+        `${baseUrl}/api/favorites/lists/${id}`,
         {
           method: 'PATCH',
           headers: {
@@ -195,7 +197,7 @@ const MyFavoriteList = () => {
       setLoading(true)
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/lists/${id}`,
+        `${baseUrl}/api/favorites/lists/${id}`,
         { method: 'DELETE' }
       )
 

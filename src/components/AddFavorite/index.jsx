@@ -15,6 +15,7 @@ import {
 const AddFavorite = ({ id }) => {
   const [isFavorite, setIsFavorite] = useState(false)
   const [showToast, setShowToast] = useState(false)
+  const baseUrl = process.env.config?.apiUrl;
 
   useEffect(() => {
     const checkFavorite = async () => {
@@ -24,7 +25,7 @@ const AddFavorite = ({ id }) => {
 
         if (!listId && email) {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/lists/user/${email}`
+            `${baseUrl}/api/favorites/lists/user/${email}`
           )
 
           const json = await res.json()
@@ -39,7 +40,7 @@ const AddFavorite = ({ id }) => {
         if (!listId) return
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/lists/${listId}`
+          `${baseUrl}/api/favorites/lists/${listId}`
         )
 
         const json = await res.json()
@@ -63,7 +64,7 @@ const AddFavorite = ({ id }) => {
 
     if (!listId) {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/lists/user/${email}`
+        `${baseUrl}/api/favorites/lists/user/${email}`
       )
 
       const json = await res.json()
@@ -85,7 +86,7 @@ const AddFavorite = ({ id }) => {
 
       if (isFavorite) {
         response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/items`,
+          `${baseUrl}/api/favorites/items`,
           {
             method: "DELETE",
             headers: {
@@ -96,7 +97,7 @@ const AddFavorite = ({ id }) => {
         )
       } else {
         response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/favorites/items`,
+          `${baseUrl}/api/favorites/items`,
           {
             method: "POST",
             headers: {
