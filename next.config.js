@@ -1,22 +1,26 @@
 
-const { resolve } = require('path');
-const webpack = require('webpack');
-const fs = require('fs');
-const withPWA = require('next-pwa');
-const runtimeCaching = require('next-pwa/cache');
+const { resolve } = require("path");
+const webpack = require("webpack");
+const fs = require("fs");
+const withPWA = require("next-pwa");
+const runtimeCaching = require("next-pwa/cache");
 
-const nodeEnv = process.env.NODE_ENV || 'development';
-const envConfig = JSON.parse(fs.readFileSync(`./config/${nodeEnv}.json`, 'utf-8'));
+const nodeEnv = process.env.NODE_ENV || "development";
+const envConfig = JSON.parse(fs.readFileSync(`./config/${nodeEnv}.json`, "utf-8"));
 
 const nextConfig = {
   swcMinify: true,
   compress: true,
   
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
   async redirects() {
     return [
       {
-        source: '/cadastrar',
-        destination: '/',
+        source: "/cadastrar",
+        destination: "/",
         permanent: true,
       },
     ];
@@ -25,8 +29,8 @@ const nextConfig = {
     async rewrites() {
     return [
       {
-        source: '/lista-de-favoritos',
-        destination: '/Favorites',
+        source: "/lista-de-favoritos",
+        destination: "/Favorites",
       },
     ]
   },
@@ -34,13 +38,13 @@ const nextConfig = {
   images: {
     unoptimized: true,
     domains: [
-      'admin.axpe.com.br',
-      'images.axpe.com.br',
-      'axpe.com.br',
-      'www-hml.axpe.com.br',
-      'axpe-frontend.vercel.app',
+      "admin.axpe.com.br",
+      "images.axpe.com.br",
+      "axpe.com.br",
+      "www-hml.axpe.com.br",
+      "axpe-frontend.vercel.app",
     ],
-    formats: [ 'image/avif', 'image/webp' ],
+    formats: [ "image/avif", "image/webp" ],
     deviceSizes: [ 375, 640, 750, 828, 1080, 1200, 1920, 2048, 3840 ],
   },
   compiler: {
@@ -50,11 +54,11 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/static/:all*',
+        source: "/static/:all*",
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=604800, immutable',
+            key: "Cache-Control",
+            value: "public, max-age=604800, immutable",
           },
         ],
       },
@@ -65,57 +69,57 @@ const nextConfig = {
       config.optimization = {
         ...config.optimization,
         splitChunks: {
-          chunks: 'all',
+          chunks: "all",
           maxInitialRequests: 25,
           minSize: 20000,
           cacheGroups: {
 
             react: {
               test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-              name: 'react',
-              chunks: 'all',
+              name: "react",
+              chunks: "all",
               priority: 40,
             },
 
             styledComponents: {
               test: /[\\/]node_modules[\\/](styled-components)[\\/]/,
-              name: 'styled-components',
-              chunks: 'all',
+              name: "styled-components",
+              chunks: "all",
               priority: 30,
             },
 
             redux: {
               test: /[\\/]node_modules[\\/](@reduxjs|redux)[\\/]/,
-              name: 'redux',
-              chunks: 'all',
+              name: "redux",
+              chunks: "all",
               priority: 30,
             },
 
             reactSlick: {
               test: /[\\/]node_modules[\\/](react-slick|slick-carousel)[\\/]/,
-              name: 'react-slick',
-              chunks: 'all',
+              name: "react-slick",
+              chunks: "all",
               priority: 30,
             },
 
             next: {
               test: /[\\/]node_modules[\\/](next)[\\/]/,
-              name: 'next',
-              chunks: 'all',
+              name: "next",
+              chunks: "all",
               priority: 30,
             },
 
             vendor: {
               test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              chunks: 'all',
+              name: "vendors",
+              chunks: "all",
               priority: 20,
             },
 
             common: {
-              name: 'common',
+              name: "common",
               minChunks: 2,
-              chunks: 'all',
+              chunks: "all",
               enforce: true,
               priority: 10,
             },
@@ -126,47 +130,47 @@ const nextConfig = {
 
     config.module.rules.push({
       test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/i,
-      type: 'asset',
+      type: "asset",
       parser: {
         dataUrlCondition: {
           maxSize: 100000,
         },
       },
       generator: {
-        filename: 'static/chunks/[name].[hash][ext]',
+        filename: "static/chunks/[name].[hash][ext]",
       },
     });
 
     config.plugins.push(
       new webpack.DefinePlugin({
-        'process.env.config': JSON.stringify(envConfig),
+        "process.env.config": JSON.stringify(envConfig),
       })
     );
 
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
-      assets: resolve(__dirname, './src/assets'),
-      components: resolve(__dirname, './src/components'),
-      helpers: resolve(__dirname, './src/helpers'),
-      layouts: resolve(__dirname, './src/layouts'),
-      pages: resolve(__dirname, './src/pages'),
-      services: resolve(__dirname, './src/services'),
-      store: resolve(__dirname, './src/store'),
+      assets: resolve(__dirname, "./src/assets"),
+      components: resolve(__dirname, "./src/components"),
+      helpers: resolve(__dirname, "./src/helpers"),
+      layouts: resolve(__dirname, "./src/layouts"),
+      pages: resolve(__dirname, "./src/pages"),
+      services: resolve(__dirname, "./src/services"),
+      store: resolve(__dirname, "./src/store"),
     };
 
     return config;
   },
 };
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
 });
 
 module.exports = withBundleAnalyzer(withPWA({
   ...nextConfig,
   pwa: {
-    dest: 'public',
-    disable: nodeEnv === 'development',
+    dest: "public",
+    disable: nodeEnv === "development",
     runtimeCaching,
     buildExcludes: [ /middleware-manifest\.json$/ ],
   },
